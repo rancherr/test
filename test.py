@@ -1,6 +1,8 @@
 #!/usr/bin/python3.8
 
 import json
+import re
+from collections import OrderedDict
 
 episodes = [
     "Game of thrones S2 e4",
@@ -70,17 +72,45 @@ def grep_name():
         new_epi.append(x.lower())
 
     matches = []
-    name = "dext"           # <--- Insert string here
+    name = "game"           # <--- Insert string here
     count = 0
     for match in new_epi:
         if name in match:
             count += 1
             matches.append(match)
-            print(match)
+            print(match.replace("season", "s").replace("episode", "e"))
+
     print(f'Total VODs: {count}')
 
 
 # 3. List seasons in each series
+def list_season():
+    epi = sorted(episodes)
+    new_epi = []
+    for x in epi:
+        new_epi.append(x.lower())
+
+    matches = []
+    name = "game"  # <--- Insert string here
+    season_count = 0
+
+    for match in new_epi:
+        if name in match:
+            season_count += 1
+            matches.append(match)
+            res = (match.replace("season", "s").replace("episode", "e"))
+            print(res)
+
+            season_name = []
+            pattern = re.compile(r'[s]\d')
+            ok = pattern.finditer(res)
+            for x in ok:
+                season_name.append(x)
+
+            final = list(dict.fromkeys(season_name))
+            print(final)
+
+
 
 
 # 4. List episodes in each seasone
@@ -88,7 +118,8 @@ def grep_name():
 
 def main():
     #vod_list()     # 1. List series in alphabetical order
-    grep_name()     # 2. Search for series by part of name
+    #grep_name()    # 2. Search for series by part of name
+    list_season()   # 3. List seasons in each series
 
 if __name__ == "__main__":
     main()
